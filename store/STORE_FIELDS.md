@@ -18,6 +18,10 @@ CORE FEATURES
 - Switch between projects (closes current groups, opens target)
 - Auto-save active project when you add, move, or close tabs
 - Persist across browser restarts (Chrome loses group IDs on restart — this extension re-creates them)
+- Search across all projects by tab title or URL with highlighted matches
+- Diff view — see what changed since your last save before updating
+- Drag-and-drop reorder projects in the popup
+- Tab count badge on extension icon
 
 KEYBOARD SHORTCUTS
 

@@ -23,6 +23,10 @@ CORE FEATURES
 - Switch between projects (closes current groups, opens target)
 - Auto-save active project when you add, move, or close tabs
 - Persist across browser restarts (Chrome loses group IDs on restart — this extension re-creates them)
+- Search across all projects by tab title or URL with highlighted matches
+- Diff view — see what changed since your last save before updating
+- Drag-and-drop reorder projects in the popup
+- Tab count badge on extension icon
 
 KEYBOARD SHORTCUTS
 
@@ -46,7 +50,7 @@ PRIVACY FIRST
 
 LIGHTWEIGHT
 
-- ~23KB JavaScript bundle (Preact, not React)
+- ~28KB JavaScript bundle (Preact, not React)
 - Minimal permissions: tabGroups, tabs, storage
 - No content scripts, no host permissions
 
@@ -61,9 +65,10 @@ tab groups, tab manager, project, workspace, productivity, tabs, save tabs, rest
 
 ## Screenshots Needed
 1. Popup with 2-3 saved projects showing group colors and tab counts (1280x800)
-2. Switching between projects — before/after (1280x800)
-3. Export/Import buttons in header with status message (1280x800)
-4. Keyboard shortcuts page at chrome://extensions/shortcuts (1280x800)
+2. Search across projects with highlighted matches (1280x800)
+3. Diff view showing added/removed tabs (1280x800)
+4. Drag-and-drop reordering projects (1280x800)
+5. Keyboard shortcuts page at chrome://extensions/shortcuts (1280x800)
 
 ## Promotional Images Needed
 - Small tile: 440x280 (required)
