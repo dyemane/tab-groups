@@ -3,7 +3,6 @@ import {
 	getProjects,
 	deleteProject as removeProject,
 	reorderProjects as reorder,
-	saveProject,
 } from "../../lib/storage.js";
 import { captureProject } from "../../lib/tab-groups.js";
 import type { Project } from "../../lib/types.js";
@@ -31,14 +30,6 @@ export function useProjects() {
 		[refresh],
 	);
 
-	const updateProject = useCallback(
-		async (project: Project) => {
-			await saveProject(project);
-			await refresh();
-		},
-		[refresh],
-	);
-
 	const deleteProject = useCallback(
 		async (id: string) => {
 			await removeProject(id);
@@ -60,7 +51,6 @@ export function useProjects() {
 		loading,
 		refresh,
 		saveCurrentAsProject,
-		updateProject,
 		deleteProject,
 		reorderProjects,
 	};

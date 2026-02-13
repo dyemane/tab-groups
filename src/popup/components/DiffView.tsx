@@ -1,15 +1,5 @@
+import { GROUP_COLORS } from "../../lib/colors.js";
 import type { ProjectDiff } from "../../lib/tab-groups.js";
-
-const COLOR_MAP: Record<string, string> = {
-	grey: "#5f6368",
-	blue: "#4A90D9",
-	red: "#D93025",
-	yellow: "#F9AB00",
-	green: "#188038",
-	pink: "#D01884",
-	purple: "#9334E6",
-	cyan: "#007B83",
-};
 
 interface DiffViewProps {
 	diff: ProjectDiff;
@@ -37,7 +27,9 @@ export function DiffView({ diff }: DiffViewProps) {
 					<div class="diff-group-header">
 						<span
 							class="group-dot"
-							style={{ backgroundColor: COLOR_MAP[g.color] ?? COLOR_MAP.grey }}
+							style={{
+								backgroundColor: GROUP_COLORS[g.color] ?? GROUP_COLORS.grey,
+							}}
 						/>
 						<span class="diff-group-title">
 							{g.status === "added" && "+ "}

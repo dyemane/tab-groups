@@ -512,6 +512,10 @@
 	color: #d93025;
 }
 
+.diff-group-modified .diff-group-title {
+	color: var(--accent);
+}
+
 .diff-tab {
 	padding-left: 14px;
 	font-size: 10px;

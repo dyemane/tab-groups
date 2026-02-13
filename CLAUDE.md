@@ -8,7 +8,7 @@ Chrome extension — save, restore, and switch tab group configurations per proj
 npm install
 npm run build    # TypeScript check + Vite build
 npm run dev      # Watch mode
-npm test         # Vitest unit tests (43 tests)
+npm test         # Vitest unit tests (53 tests)
 npm run lint     # Biome check
 ```
 
@@ -27,11 +27,13 @@ src/
 │   ├── index.tsx                # Preact render
 │   ├── App.tsx                  # Root component (export/import controls here)
 │   ├── components/
-│   │   ├── ProjectList.tsx      # List of saved projects
-│   │   ├── ProjectCard.tsx      # Single project with group summary
+│   │   ├── ProjectList.tsx      # List with drag-and-drop reordering
+│   │   ├── ProjectCard.tsx      # Project card with diff view toggle
 │   │   ├── GroupRow.tsx         # Tab group row (color dot, title, tab count)
 │   │   ├── TabRow.tsx           # Individual tab within expanded group
 │   │   ├── AddProjectForm.tsx   # Save current groups as new project
+│   │   ├── SearchResults.tsx    # Search results with highlighted matches
+│   │   ├── DiffView.tsx         # Saved vs live diff display
 │   │   └── ConfirmDialog.tsx    # Delete confirmation
 │   ├── hooks/
 │   │   ├── useProjects.ts       # CRUD for projects in chrome.storage.local
@@ -43,15 +45,18 @@ src/
 ├── background/
 │   └── service-worker.ts        # Auto-save, keyboard shortcut handlers
 ├── lib/
-│   ├── storage.ts               # chrome.storage.local get/set wrapper
+│   ├── storage.ts               # chrome.storage.local get/set/reorder wrapper
 │   ├── export-import.ts         # Export/import JSON, validation, file download
-│   ├── tab-groups.ts            # Save/restore/diff group logic
+│   ├── tab-groups.ts            # Save/restore/switch/diff group logic
 │   ├── tabs.ts                  # Tab query/create/group/ungroup helpers
+│   ├── search.ts                # Cross-project tab search
+│   ├── colors.ts                # Shared group color hex values
 │   └── types.ts                 # Shared TypeScript types
 └── __tests__/
     ├── storage.test.ts
     ├── tab-groups.test.ts
     ├── tabs.test.ts
+    ├── search.test.ts
     └── export-import.test.ts
 ```
 
@@ -154,10 +159,11 @@ After `npm run build`, the `dist/` folder is the extension root. The `manifest.j
 Unit tests mock `chrome.*` APIs with `vi.stubGlobal("chrome", ...)`. Tests cover:
 - `storage.test.ts` — CRUD operations on chrome.storage.local (13 tests)
 - `tabs.test.ts` — snapshot/match helpers, pure functions (9 tests)
-- `tab-groups.test.ts` — countTabs, diffProjects, pure functions (8 tests)
+- `tab-groups.test.ts` — countTabs, diffGroups, pure functions (9 tests)
+- `search.test.ts` — cross-project search and match counting (9 tests)
 - `export-import.test.ts` — parse validation, export format, merge/replace import (13 tests)
 
-Run: `npm test` (43 tests total)
+Run: `npm test` (53 tests total)
 
 ## Stack
 
@@ -185,10 +191,10 @@ Run: `npm test` (43 tests total)
 - [x] Persist across browser restarts (match by title+color)
 - [x] Export/import projects as JSON (versioned format with validation)
 - [x] Keyboard shortcuts (next/prev project, save)
+- [x] Search across all projects (tab titles/URLs with highlighted matches)
+- [x] Tab count badge on extension icon
+- [x] Drag-and-drop reorder projects
+- [x] Diff view (saved vs live tab-level comparison)
 
 ### Next
-- [ ] Drag-and-drop reorder groups and tabs in popup
-- [ ] Search across all projects (fuzzy match tab titles/URLs)
 - [ ] Project templates (pre-loaded tab sets for common workflows)
-- [ ] Tab count badge on extension icon
-- [ ] Diff view (show what changed since last save)
