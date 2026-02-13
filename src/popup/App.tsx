@@ -1,11 +1,14 @@
-import { useRef, useState } from "preact/hooks";
+import { useMemo, useRef, useState } from "preact/hooks";
 import {
 	downloadJson,
 	exportAllProjects,
 	importProjects,
 } from "../lib/export-import.js";
+import { countSearchMatches, searchProjects } from "../lib/search.js";
+import { switchToProject } from "../lib/tab-groups.js";
 import { AddProjectForm } from "./components/AddProjectForm.js";
 import { ProjectList } from "./components/ProjectList.js";
+import { SearchResults } from "./components/SearchResults.js";
 import { useActiveProject } from "./hooks/useActiveProject.js";
 import { useProjects } from "./hooks/useProjects.js";
 import { useTabGroups } from "./hooks/useTabGroups.js";
@@ -20,7 +23,18 @@ export function App() {
 		refresh: refreshActive,
 	} = useActiveProject();
 	const [importStatus, setImportStatus] = useState<string | null>(null);
+	const [searchQuery, setSearchQuery] = useState("");
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const searchResults = useMemo(
+		() => searchProjects(projects, searchQuery),
+		[projects, searchQuery],
+	);
+	const matchCount = useMemo(
+		() => countSearchMatches(searchResults),
+		[searchResults],
+	);
+	const isSearching = searchQuery.trim().length > 0;
 
 	const handleSave = async (name: string) => {
 		await saveCurrentAsProject(name);
@@ -112,8 +126,39 @@ export function App() {
 
 			<AddProjectForm onSave={handleSave} />
 
+			{projects.length > 0 && (
+				<div class="search-bar">
+					<input
+						type="text"
+						placeholder="Search tabs across projects..."
+						value={searchQuery}
+						onInput={(e) =>
+							setSearchQuery((e.target as HTMLInputElement).value)
+						}
+					/>
+					{isSearching && (
+						<span class="search-count">
+							{matchCount} tab{matchCount !== 1 ? "s" : ""} in{" "}
+							{searchResults.length} project
+							{searchResults.length !== 1 ? "s" : ""}
+						</span>
+					)}
+				</div>
+			)}
+
 			{loading ? (
 				<div class="empty-state">Loading...</div>
+			) : isSearching ? (
+				<SearchResults
+					results={searchResults}
+					query={searchQuery}
+					onSwitchTo={async (id) => {
+						await switchToProject(id);
+						await setActive(id);
+						await handleRefresh();
+						setSearchQuery("");
+					}}
+				/>
 			) : (
 				<ProjectList
 					projects={projects}

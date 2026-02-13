@@ -1,8 +1,33 @@
 import { getActiveProjectId, getStore } from "../lib/storage.js";
-import { autoSaveActiveProject, switchToProject } from "../lib/tab-groups.js";
+import {
+	autoSaveActiveProject,
+	countTabs,
+	switchToProject,
+} from "../lib/tab-groups.js";
 
 let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 const DEBOUNCE_MS = 2000;
+
+/** Update the extension icon badge with tab count of active project */
+async function updateBadge() {
+	const store = await getStore();
+	const { projects, activeProjectId } = store;
+
+	if (!activeProjectId) {
+		await chrome.action.setBadgeText({ text: "" });
+		return;
+	}
+
+	const project = projects.find((p) => p.id === activeProjectId);
+	if (!project) {
+		await chrome.action.setBadgeText({ text: "" });
+		return;
+	}
+
+	const count = countTabs(project);
+	await chrome.action.setBadgeText({ text: count > 0 ? String(count) : "" });
+	await chrome.action.setBadgeBackgroundColor({ color: "#4A90D9" });
+}
 
 /** Debounced auto-save: waits for activity to settle before saving */
 function scheduleSave() {
@@ -14,11 +39,15 @@ function scheduleSave() {
 
 		try {
 			await autoSaveActiveProject();
+			await updateBadge();
 		} catch (err) {
 			console.error("[tab-groups] Auto-save failed:", err);
 		}
 	}, DEBOUNCE_MS);
 }
+
+// Set badge on startup
+updateBadge();
 
 // Listen for tab group changes
 chrome.tabGroups.onCreated.addListener(() => scheduleSave());
@@ -64,8 +93,10 @@ chrome.commands.onCommand.addListener(async (command) => {
 			}
 
 			await switchToProject(projects[nextIdx].id);
+			await updateBadge();
 		} else if (command === "save-current-project") {
 			await autoSaveActiveProject();
+			await updateBadge();
 		}
 	} catch (err) {
 		console.error("[tab-groups] Command failed:", command, err);
