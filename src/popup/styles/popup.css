@@ -1,0 +1,271 @@
+.popup {
+	width: 360px;
+	min-height: 200px;
+	max-height: 520px;
+	padding: 12px;
+	overflow-y: auto;
+}
+
+.popup-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--border);
+}
+
+.popup-header h1 {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.popup-header .tab-count {
+	font-size: 11px;
+	color: var(--text-muted);
+}
+
+/* Project list */
+.project-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.empty-state {
+	text-align: center;
+	padding: 32px 16px;
+	color: var(--text-muted);
+}
+
+.empty-state p {
+	margin-bottom: 12px;
+}
+
+/* Project card */
+.project-card {
+	background: var(--bg-card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 10px 12px;
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.project-card:hover {
+	background: var(--bg-card-hover);
+	border-color: var(--border-light);
+}
+
+.project-card.active {
+	border-color: var(--accent);
+}
+
+.project-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 6px;
+}
+
+.project-card-name {
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.project-card-meta {
+	font-size: 11px;
+	color: var(--text-muted);
+}
+
+.project-card-actions {
+	display: flex;
+	gap: 4px;
+}
+
+/* Group rows */
+.group-list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.group-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 0;
+	font-size: 12px;
+	width: 100%;
+	background: none;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	text-align: left;
+}
+
+.group-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.group-title {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.group-tab-count {
+	color: var(--text-muted);
+	font-size: 11px;
+	flex-shrink: 0;
+}
+
+/* Tab rows (expanded) */
+.tab-list {
+	margin-left: 18px;
+	padding-left: 8px;
+	border-left: 1px solid var(--border);
+}
+
+.tab-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 0;
+	font-size: 11px;
+	color: var(--text-secondary);
+}
+
+.tab-row .favicon {
+	width: 12px;
+	height: 12px;
+	flex-shrink: 0;
+}
+
+.tab-row .tab-title {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Buttons */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 12px;
+	border: none;
+	border-radius: var(--radius-sm);
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.btn-primary {
+	background: var(--accent);
+	color: #fff;
+}
+
+.btn-primary:hover {
+	background: var(--accent-hover);
+}
+
+.btn-danger {
+	background: transparent;
+	color: var(--danger);
+	padding: 4px 6px;
+}
+
+.btn-danger:hover {
+	background: rgba(255, 71, 87, 0.1);
+}
+
+.btn-ghost {
+	background: transparent;
+	color: var(--text-secondary);
+	padding: 4px 6px;
+}
+
+.btn-ghost:hover {
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--text-primary);
+}
+
+.btn-sm {
+	padding: 3px 8px;
+	font-size: 11px;
+}
+
+.btn-full {
+	width: 100%;
+}
+
+/* Add project form */
+.add-project-form {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.add-project-form input {
+	flex: 1;
+	padding: 6px 10px;
+	background: var(--bg-input);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	color: var(--text-primary);
+	font-size: 12px;
+	outline: none;
+	transition: border-color 0.15s;
+}
+
+.add-project-form input:focus {
+	border-color: var(--accent);
+}
+
+.add-project-form input::placeholder {
+	color: var(--text-muted);
+}
+
+/* Confirm dialog */
+.confirm-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+}
+
+.confirm-dialog {
+	background: var(--bg-secondary);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 16px;
+	max-width: 280px;
+	width: 100%;
+}
+
+.confirm-dialog h3 {
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+.confirm-dialog p {
+	font-size: 12px;
+	color: var(--text-secondary);
+	margin-bottom: 12px;
+}
+
+.confirm-dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
