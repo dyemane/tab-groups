@@ -15,6 +15,17 @@
 	border-bottom: 1px solid var(--border);
 }
 
+.popup-header-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.popup-header-actions {
+	display: flex;
+	gap: 4px;
+}
+
 .popup-header h1 {
 	font-size: 15px;
 	font-weight: 600;
@@ -23,6 +34,20 @@
 .popup-header .tab-count {
 	font-size: 11px;
 	color: var(--text-muted);
+}
+
+.hidden-file-input {
+	display: none;
+}
+
+.import-status {
+	font-size: 11px;
+	padding: 6px 10px;
+	margin-bottom: 8px;
+	border-radius: var(--radius-sm);
+	background: var(--bg-card);
+	border: 1px solid var(--border);
+	color: var(--text-secondary);
 }
 
 /* Project list */
