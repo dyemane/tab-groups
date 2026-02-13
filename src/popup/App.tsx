@@ -38,7 +38,7 @@ export function App() {
 				)}
 			</div>
 
-			<AddProjectForm onSave={handleSave} disabled={liveGroups.length === 0} />
+			<AddProjectForm onSave={handleSave} />
 
 			{loading ? (
 				<div class="empty-state">Loading...</div>

@@ -2,10 +2,9 @@ import { useState } from "preact/hooks";
 
 interface AddProjectFormProps {
 	onSave: (name: string) => Promise<void>;
-	disabled?: boolean;
 }
 
-export function AddProjectForm({ onSave, disabled }: AddProjectFormProps) {
+export function AddProjectForm({ onSave }: AddProjectFormProps) {
 	const [name, setName] = useState("");
 	const [saving, setSaving] = useState(false);
 
@@ -30,7 +29,7 @@ export function AddProjectForm({ onSave, disabled }: AddProjectFormProps) {
 				placeholder="Project name..."
 				value={name}
 				onInput={(e) => setName((e.target as HTMLInputElement).value)}
-				disabled={disabled || saving}
+				disabled={saving}
 			/>
 			<button
 				class="btn btn-primary btn-sm"
