@@ -1,11 +1,13 @@
-import { useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import {
 	captureProject,
 	countTabs,
+	diffGroups,
 	switchToProject,
 } from "../../lib/tab-groups.js";
-import type { Project } from "../../lib/types.js";
+import type { Project, SavedGroup } from "../../lib/types.js";
 import { ConfirmDialog } from "./ConfirmDialog.js";
+import { DiffView } from "./DiffView.js";
 import { GroupRow } from "./GroupRow.js";
 
 interface ProjectCardProps {
@@ -13,6 +15,7 @@ interface ProjectCardProps {
 	isActive: boolean;
 	isDragging: boolean;
 	isDropTarget: boolean;
+	liveGroups: SavedGroup[];
 	onDelete: (id: string) => Promise<void>;
 	onSetActive: (id: string | null) => Promise<void>;
 	onRefresh: () => Promise<void>;
@@ -28,6 +31,7 @@ export function ProjectCard({
 	isActive,
 	isDragging,
 	isDropTarget,
+	liveGroups,
 	onDelete,
 	onSetActive,
 	onRefresh,
@@ -39,9 +43,15 @@ export function ProjectCard({
 }: ProjectCardProps) {
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [switching, setSwitching] = useState(false);
+	const [showDiff, setShowDiff] = useState(false);
 
 	const tabCount = countTabs(project);
 	const timeAgo = formatTimeAgo(project.updatedAt);
+
+	const diff = useMemo(
+		() => (isActive ? diffGroups(project.groups, liveGroups) : null),
+		[isActive, project.groups, liveGroups],
+	);
 
 	const handleSwitch = async () => {
 		if (switching) return;
@@ -95,14 +105,28 @@ export function ProjectCard({
 				</div>
 				<div class="project-card-actions">
 					{isActive ? (
-						<button
-							type="button"
-							class="btn btn-ghost btn-sm"
-							onClick={handleUpdate}
-							title="Update with current tabs"
-						>
-							Update
-						</button>
+						<>
+							{diff?.hasChanges && (
+								<button
+									type="button"
+									class={`btn btn-ghost btn-sm diff-toggle${showDiff ? " diff-toggle-active" : ""}`}
+									onClick={() => setShowDiff(!showDiff)}
+									title="Show changes since last save"
+								>
+									{diff.totalAdded > 0 && `+${diff.totalAdded}`}
+									{diff.totalAdded > 0 && diff.totalRemoved > 0 && " "}
+									{diff.totalRemoved > 0 && `-${diff.totalRemoved}`}
+								</button>
+							)}
+							<button
+								type="button"
+								class="btn btn-ghost btn-sm"
+								onClick={handleUpdate}
+								title="Update with current tabs"
+							>
+								Update
+							</button>
+						</>
 					) : (
 						<button
 							type="button"
@@ -136,6 +160,8 @@ export function ProjectCard({
 					<GroupRow key={`${group.title}-${group.color}`} group={group} />
 				))}
 			</div>
+
+			{showDiff && diff?.hasChanges && <DiffView diff={diff} />}
 
 			{showConfirm && (
 				<ConfirmDialog

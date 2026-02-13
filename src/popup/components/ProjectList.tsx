@@ -1,10 +1,11 @@
 import { useState } from "preact/hooks";
-import type { Project } from "../../lib/types.js";
+import type { Project, SavedGroup } from "../../lib/types.js";
 import { ProjectCard } from "./ProjectCard.js";
 
 interface ProjectListProps {
 	projects: Project[];
 	activeProjectId: string | null;
+	liveGroups: SavedGroup[];
 	onDelete: (id: string) => Promise<void>;
 	onSetActive: (id: string | null) => Promise<void>;
 	onRefresh: () => Promise<void>;
@@ -14,6 +15,7 @@ interface ProjectListProps {
 export function ProjectList({
 	projects,
 	activeProjectId,
+	liveGroups,
 	onDelete,
 	onSetActive,
 	onRefresh,
@@ -70,6 +72,7 @@ export function ProjectList({
 					key={project.id}
 					project={project}
 					isActive={project.id === activeProjectId}
+					liveGroups={liveGroups}
 					isDragging={project.id === dragId}
 					isDropTarget={project.id === dropTargetId}
 					onDelete={onDelete}

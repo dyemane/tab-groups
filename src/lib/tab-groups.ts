@@ -11,7 +11,7 @@ import {
 	removeGroup,
 	snapshotGroup,
 } from "./tabs.js";
-import type { Project, SavedGroup } from "./types.js";
+import type { Project, SavedGroup, SavedTab } from "./types.js";
 
 /** Capture all current tab groups as a new or updated project */
 export async function captureProject(
@@ -95,43 +95,90 @@ export function countTabs(project: Project): number {
 	return project.groups.reduce((sum, g) => sum + g.tabs.length, 0);
 }
 
-/** Diff two projects to see what changed */
-export function diffProjects(
-	a: Project,
-	b: Project,
-): { added: string[]; removed: string[]; modified: string[] } {
-	const aGroups = new Map(a.groups.map((g) => [g.title, g]));
-	const bGroups = new Map(b.groups.map((g) => [g.title, g]));
+/** Tab-level diff of a group */
+export interface GroupDiff {
+	title: string;
+	color: string;
+	status: "added" | "removed" | "modified" | "unchanged";
+	addedTabs: SavedTab[];
+	removedTabs: SavedTab[];
+}
 
-	const added: string[] = [];
-	const removed: string[] = [];
-	const modified: string[] = [];
+/** Full diff between saved and live state */
+export interface ProjectDiff {
+	groups: GroupDiff[];
+	totalAdded: number;
+	totalRemoved: number;
+	hasChanges: boolean;
+}
 
-	for (const [title] of bGroups) {
-		if (!aGroups.has(title)) added.push(title);
-	}
+/** Diff saved project groups against live groups */
+export function diffGroups(
+	saved: SavedGroup[],
+	live: SavedGroup[],
+): ProjectDiff {
+	const savedMap = new Map(saved.map((g) => [g.title, g]));
+	const liveMap = new Map(live.map((g) => [g.title, g]));
+	const groups: GroupDiff[] = [];
+	let totalAdded = 0;
+	let totalRemoved = 0;
 
-	for (const [title] of aGroups) {
-		if (!bGroups.has(title)) removed.push(title);
-	}
-
-	for (const [title, aGroup] of aGroups) {
-		const bGroup = bGroups.get(title);
-		if (bGroup && !groupsEqual(aGroup, bGroup)) {
-			modified.push(title);
+	// Groups in live but not saved (new groups)
+	for (const [title, liveGroup] of liveMap) {
+		if (!savedMap.has(title)) {
+			groups.push({
+				title,
+				color: liveGroup.color,
+				status: "added",
+				addedTabs: liveGroup.tabs,
+				removedTabs: [],
+			});
+			totalAdded += liveGroup.tabs.length;
 		}
 	}
 
-	return { added, removed, modified };
-}
+	// Groups in saved but not live (removed groups)
+	for (const [title, savedGroup] of savedMap) {
+		if (!liveMap.has(title)) {
+			groups.push({
+				title,
+				color: savedGroup.color,
+				status: "removed",
+				addedTabs: [],
+				removedTabs: savedGroup.tabs,
+			});
+			totalRemoved += savedGroup.tabs.length;
+		}
+	}
 
-function groupsEqual(a: SavedGroup, b: SavedGroup): boolean {
-	if (a.color !== b.color || a.collapsed !== b.collapsed) return false;
-	if (a.tabs.length !== b.tabs.length) return false;
-	return a.tabs.every(
-		(t, i) =>
-			t.url === b.tabs[i].url &&
-			t.title === b.tabs[i].title &&
-			t.pinned === b.tabs[i].pinned,
-	);
+	// Groups in both — diff tabs by URL
+	for (const [title, savedGroup] of savedMap) {
+		const liveGroup = liveMap.get(title);
+		if (!liveGroup) continue;
+
+		const savedUrls = new Set(savedGroup.tabs.map((t) => t.url));
+		const liveUrls = new Set(liveGroup.tabs.map((t) => t.url));
+
+		const addedTabs = liveGroup.tabs.filter((t) => !savedUrls.has(t.url));
+		const removedTabs = savedGroup.tabs.filter((t) => !liveUrls.has(t.url));
+
+		if (addedTabs.length > 0 || removedTabs.length > 0) {
+			groups.push({
+				title,
+				color: liveGroup.color,
+				status: "modified",
+				addedTabs,
+				removedTabs,
+			});
+			totalAdded += addedTabs.length;
+			totalRemoved += removedTabs.length;
+		}
+	}
+
+	return {
+		groups,
+		totalAdded,
+		totalRemoved,
+		hasChanges: groups.length > 0,
+	};
 }

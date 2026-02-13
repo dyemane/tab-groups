@@ -171,6 +171,7 @@ export function App() {
 				<ProjectList
 					projects={projects}
 					activeProjectId={activeProjectId}
+					liveGroups={liveGroups}
 					onDelete={deleteProject}
 					onSetActive={setActive}
 					onRefresh={handleRefresh}
