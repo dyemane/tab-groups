@@ -58,9 +58,7 @@ English
 
 ## Store Icon (128x128)
 
-```
-/Users/dyemane/dev/tab-groups/public/icons/icon-128.png
-```
+Upload `public/icons/icon-128.png`
 
 ## Homepage URL
 
