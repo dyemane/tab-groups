@@ -11,17 +11,31 @@ import { GroupRow } from "./GroupRow.js";
 interface ProjectCardProps {
 	project: Project;
 	isActive: boolean;
+	isDragging: boolean;
+	isDropTarget: boolean;
 	onDelete: (id: string) => Promise<void>;
 	onSetActive: (id: string | null) => Promise<void>;
 	onRefresh: () => Promise<void>;
+	onDragStart: () => void;
+	onDragOver: (e: DragEvent) => void;
+	onDragLeave: () => void;
+	onDrop: () => void;
+	onDragEnd: () => void;
 }
 
 export function ProjectCard({
 	project,
 	isActive,
+	isDragging,
+	isDropTarget,
 	onDelete,
 	onSetActive,
 	onRefresh,
+	onDragStart,
+	onDragOver,
+	onDragLeave,
+	onDrop,
+	onDragEnd,
 }: ProjectCardProps) {
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [switching, setSwitching] = useState(false);
@@ -51,10 +65,34 @@ export function ProjectCard({
 		await onDelete(project.id);
 	};
 
+	let className = "project-card";
+	if (isActive) className += " active";
+	if (isDragging) className += " dragging";
+	if (isDropTarget) className += " drop-target";
+
 	return (
-		<div class={`project-card${isActive ? " active" : ""}`}>
+		<div
+			class={className}
+			draggable
+			onDragStart={(e) => {
+				if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+				onDragStart();
+			}}
+			onDragOver={onDragOver}
+			onDragLeave={onDragLeave}
+			onDrop={(e) => {
+				e.preventDefault();
+				onDrop();
+			}}
+			onDragEnd={onDragEnd}
+		>
 			<div class="project-card-header">
-				<span class="project-card-name">{project.name}</span>
+				<div class="project-card-name-row">
+					<span class="drag-handle" title="Drag to reorder">
+						⠿
+					</span>
+					<span class="project-card-name">{project.name}</span>
+				</div>
 				<div class="project-card-actions">
 					{isActive ? (
 						<button

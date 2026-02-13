@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import {
 	getProjects,
 	deleteProject as removeProject,
+	reorderProjects as reorder,
 	saveProject,
 } from "../../lib/storage.js";
 import { captureProject } from "../../lib/tab-groups.js";
@@ -46,6 +47,14 @@ export function useProjects() {
 		[refresh],
 	);
 
+	const reorderProjects = useCallback(
+		async (orderedIds: string[]) => {
+			await reorder(orderedIds);
+			await refresh();
+		},
+		[refresh],
+	);
+
 	return {
 		projects,
 		loading,
@@ -53,5 +62,6 @@ export function useProjects() {
 		saveCurrentAsProject,
 		updateProject,
 		deleteProject,
+		reorderProjects,
 	};
 }

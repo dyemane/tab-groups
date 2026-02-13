@@ -15,8 +15,14 @@ import { useProjects } from "./hooks/useProjects.js";
 import { useTabGroups } from "./hooks/useTabGroups.js";
 
 export function App() {
-	const { projects, loading, refresh, saveCurrentAsProject, deleteProject } =
-		useProjects();
+	const {
+		projects,
+		loading,
+		refresh,
+		saveCurrentAsProject,
+		deleteProject,
+		reorderProjects,
+	} = useProjects();
 	const { liveGroups } = useTabGroups();
 	const {
 		activeProjectId,
@@ -168,6 +174,7 @@ export function App() {
 					onDelete={deleteProject}
 					onSetActive={setActive}
 					onRefresh={handleRefresh}
+					onReorder={reorderProjects}
 				/>
 			)}
 		</div>

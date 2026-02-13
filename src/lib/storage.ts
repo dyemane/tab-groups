@@ -53,6 +53,15 @@ export async function deleteProject(id: string): Promise<void> {
 	await saveStore(store);
 }
 
+export async function reorderProjects(orderedIds: string[]): Promise<void> {
+	const store = await getStore();
+	const byId = new Map(store.projects.map((p) => [p.id, p]));
+	store.projects = orderedIds
+		.map((id) => byId.get(id))
+		.filter((p): p is Project => p != null);
+	await saveStore(store);
+}
+
 export async function getActiveProjectId(): Promise<string | null> {
 	const store = await getStore();
 	return store.activeProjectId;
