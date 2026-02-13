@@ -21,7 +21,7 @@ function makeProject(
 }
 
 const projects: Project[] = [
-	makeProject("life-cli", [
+	makeProject("my-app", [
 		{
 			title: "Docs",
 			tabs: [
@@ -33,17 +33,17 @@ const projects: Project[] = [
 			title: "PRs",
 			tabs: [
 				{
-					title: "Pull Requests - life",
-					url: "https://github.com/dyemane/life/pulls",
+					title: "Pull Requests - my-app",
+					url: "https://github.com/acme/my-app/pulls",
 				},
 			],
 		},
 	]),
-	makeProject("devjson", [
+	makeProject("dashboard", [
 		{
 			title: "Code",
 			tabs: [
-				{ title: "dyemane/devjson", url: "https://github.com/dyemane/devjson" },
+				{ title: "acme/dashboard", url: "https://github.com/acme/dashboard" },
 			],
 		},
 		{
@@ -65,7 +65,7 @@ describe("searchProjects", () => {
 	it("matches tab titles (case-insensitive)", () => {
 		const results = searchProjects(projects, "drizzle");
 		expect(results).toHaveLength(1);
-		expect(results[0].project.name).toBe("life-cli");
+		expect(results[0].project.name).toBe("my-app");
 		expect(results[0].matchingGroups).toHaveLength(1);
 		expect(results[0].matchingGroups[0].matchingTabs).toHaveLength(1);
 		expect(results[0].matchingGroups[0].matchingTabs[0].title).toBe(
@@ -76,8 +76,8 @@ describe("searchProjects", () => {
 	it("matches tab URLs", () => {
 		const results = searchProjects(projects, "github.com");
 		expect(results).toHaveLength(2);
-		expect(results[0].project.name).toBe("life-cli");
-		expect(results[1].project.name).toBe("devjson");
+		expect(results[0].project.name).toBe("my-app");
+		expect(results[1].project.name).toBe("dashboard");
 	});
 
 	it("matches project name even with no tab matches", () => {
@@ -88,14 +88,14 @@ describe("searchProjects", () => {
 	});
 
 	it("matches across multiple groups in same project", () => {
-		const results = searchProjects(projects, "dyemane");
+		const results = searchProjects(projects, "acme");
 		expect(results).toHaveLength(2);
-		// life-cli has dyemane in PRs group URL
-		const lifeCli = results.find((r) => r.project.name === "life-cli");
-		expect(lifeCli?.matchingGroups).toHaveLength(1);
-		// devjson has dyemane in Code group URL
-		const devjson = results.find((r) => r.project.name === "devjson");
-		expect(devjson?.matchingGroups).toHaveLength(1);
+		// my-app has acme in PRs group URL
+		const myApp = results.find((r) => r.project.name === "my-app");
+		expect(myApp?.matchingGroups).toHaveLength(1);
+		// dashboard has acme in Code group URL
+		const dashboard = results.find((r) => r.project.name === "dashboard");
+		expect(dashboard?.matchingGroups).toHaveLength(1);
 	});
 
 	it("returns no results for non-matching query", () => {
@@ -108,7 +108,7 @@ describe("countSearchMatches", () => {
 	it("counts total matching tabs", () => {
 		const results = searchProjects(projects, "github.com");
 		const count = countSearchMatches(results);
-		expect(count).toBe(2); // one in life-cli PRs, one in devjson Code
+		expect(count).toBe(2); // one in my-app PRs, one in dashboard Code
 	});
 
 	it("returns 0 for no matches", () => {
