@@ -79,7 +79,7 @@ LIGHTWEIGHT
 ### Category
 
 ```
-Productivity
+Tools
 ```
 
 ### Language
@@ -164,6 +164,17 @@ Upload these from `store/` (all 1280x800):
 2. `screenshot-2-search.png` — Cross-project search with highlighted matches
 3. `screenshot-3-diff.png` — Diff view showing added/removed tabs
 
-## 7. Submit
+## 7. Promo Tiles (optional)
+
+Upload from `store/`:
+
+- **Small promo tile** (440x280): `promo-small-440x280.png`
+- **Marquee promo tile** (1400x560): `promo-marquee-1400x560.png`
+
+## 8. Submit
 
 Click **"Submit for Review"** — typically 1-3 business days.
+
+## Status
+
+Submitted for review on 2026-02-13.

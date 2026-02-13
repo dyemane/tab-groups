@@ -30,6 +30,12 @@ Customize shortcuts at `chrome://extensions/shortcuts`.
 
 ## Install
 
+### From Chrome Web Store (recommended)
+
+Install from the [Chrome Web Store](https://chromewebstore.google.com/) — search "Project Tab Groups" (pending review).
+
+### From Source
+
 ```bash
 npm install
 npm run build

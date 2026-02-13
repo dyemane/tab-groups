@@ -55,7 +55,7 @@ LIGHTWEIGHT
 - No content scripts, no host permissions
 
 ## Category
-Productivity
+Tools
 
 ## Language
 English
@@ -63,23 +63,14 @@ English
 ## Tags
 tab groups, tab manager, project, workspace, productivity, tabs, save tabs, restore tabs, session, open source
 
-## Screenshots Needed
-1. Popup with 2-3 saved projects showing group colors and tab counts (1280x800)
-2. Search across projects with highlighted matches (1280x800)
-3. Diff view showing added/removed tabs (1280x800)
-4. Drag-and-drop reordering projects (1280x800)
-5. Keyboard shortcuts page at chrome://extensions/shortcuts (1280x800)
+## Screenshots (uploaded)
+1. `screenshot-1-main.png` — Popup with 3 saved projects, group colors, tab counts (1280x800)
+2. `screenshot-2-search.png` — Cross-project search with highlighted matches (1280x800)
+3. `screenshot-3-diff.png` — Diff view showing added/removed tabs (1280x800)
 
-## Promotional Images Needed
-- Small tile: 440x280 (required)
-- Large tile: 920x680 (optional)
-- Marquee: 1400x560 (optional)
-
-## Screenshot Instructions
-1. Save 2-3 projects with different colored tab groups
-2. Open the extension popup
-3. Take screenshots at 1280x800 (or crop to that ratio)
-4. For the shortcuts screenshot, go to chrome://extensions/shortcuts
+## Promotional Images (uploaded)
+- Small tile: `promo-small-440x280.png` (440x280)
+- Marquee: `promo-marquee-1400x560.png` (1400x560)
 
 ## Privacy Policy URL
 https://github.com/dyemane/tab-groups/blob/master/PRIVACY.md

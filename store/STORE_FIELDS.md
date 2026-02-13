@@ -47,7 +47,7 @@ PRIVACY FIRST
 ## Category
 
 ```
-Productivity
+Tools
 ```
 
 ## Language
