@@ -2,6 +2,16 @@ import type { Project, ProjectStore } from "./types.js";
 
 const STORAGE_KEY = "projects";
 const ACTIVE_KEY = "activeProjectId";
+const SWITCHING_KEY = "switching";
+
+export async function setSwitching(value: boolean): Promise<void> {
+	await chrome.storage.local.set({ [SWITCHING_KEY]: value });
+}
+
+export async function isSwitching(): Promise<boolean> {
+	const result = await chrome.storage.local.get(SWITCHING_KEY);
+	return result[SWITCHING_KEY] === true;
+}
 
 export async function getStore(): Promise<ProjectStore> {
 	const result = await chrome.storage.local.get([STORAGE_KEY, ACTIVE_KEY]);

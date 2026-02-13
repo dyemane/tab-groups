@@ -3,7 +3,7 @@ import type { SearchResult } from "../../lib/search.js";
 interface SearchResultsProps {
 	results: SearchResult[];
 	query: string;
-	onSwitchTo: (projectId: string) => Promise<void>;
+	onSwitchTo: (projectId: string, tabUrl?: string) => Promise<void>;
 }
 
 export function SearchResults({
@@ -24,7 +24,12 @@ export function SearchResults({
 						<button
 							type="button"
 							class="btn btn-primary btn-sm"
-							onClick={() => onSwitchTo(result.project.id)}
+							onClick={() =>
+								onSwitchTo(
+									result.project.id,
+									result.matchingGroups[0]?.matchingTabs[0]?.url,
+								)
+							}
 						>
 							Switch
 						</button>
@@ -41,9 +46,15 @@ export function SearchResults({
 							<span class="search-group-title">{gm.group.title}</span>
 							<div class="search-matching-tabs">
 								{gm.matchingTabs.map((tab) => (
-									<div key={tab.url} class="search-tab">
+									<button
+										key={tab.url}
+										type="button"
+										class="search-tab"
+										onClick={() => onSwitchTo(result.project.id, tab.url)}
+										title={tab.url}
+									>
 										<HighlightedText text={tab.title} query={query} />
-									</div>
+									</button>
 								))}
 							</div>
 						</div>

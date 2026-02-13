@@ -6,6 +6,7 @@ import {
 } from "../lib/export-import.js";
 import { countSearchMatches, searchProjects } from "../lib/search.js";
 import { switchToProject } from "../lib/tab-groups.js";
+import { activateTabByUrl } from "../lib/tabs.js";
 import { AddProjectForm } from "./components/AddProjectForm.js";
 import { ProjectList } from "./components/ProjectList.js";
 import { SearchResults } from "./components/SearchResults.js";
@@ -152,8 +153,9 @@ export function App() {
 				<SearchResults
 					results={searchResults}
 					query={searchQuery}
-					onSwitchTo={async (id) => {
+					onSwitchTo={async (id, tabUrl) => {
 						await switchToProject(id);
+						if (tabUrl) await activateTabByUrl(tabUrl);
 						await setActive(id);
 						await handleRefresh();
 						setSearchQuery("");

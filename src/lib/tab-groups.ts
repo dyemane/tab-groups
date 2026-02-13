@@ -1,4 +1,9 @@
-import { getStore, saveProject, setActiveProjectId } from "./storage.js";
+import {
+	getStore,
+	saveProject,
+	setActiveProjectId,
+	setSwitching,
+} from "./storage.js";
 import {
 	createGroupWithTabs,
 	getLiveGroups,
@@ -59,8 +64,13 @@ export async function closeAllGroups(): Promise<void> {
 
 /** Switch from current groups to a target project */
 export async function switchToProject(projectId: string): Promise<void> {
-	await closeAllGroups();
-	await restoreProject(projectId);
+	await setSwitching(true);
+	try {
+		await closeAllGroups();
+		await restoreProject(projectId);
+	} finally {
+		await setSwitching(false);
+	}
 }
 
 /** Auto-save: update the active project with current live groups */

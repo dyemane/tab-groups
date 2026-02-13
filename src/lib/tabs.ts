@@ -78,6 +78,19 @@ export function snapshotTab(tab: chrome.tabs.Tab): SavedTab {
 	};
 }
 
+/** Activate (focus) a tab by URL in the current window */
+export async function activateTabByUrl(url: string): Promise<boolean> {
+	const tabs = await chrome.tabs.query({
+		windowId: chrome.windows.WINDOW_ID_CURRENT,
+	});
+	const match = tabs.find((t) => t.url === url || t.pendingUrl === url);
+	if (match?.id != null) {
+		await chrome.tabs.update(match.id, { active: true });
+		return true;
+	}
+	return false;
+}
+
 /** Find a live group matching by title and color (since group IDs reset on restart) */
 export function findMatchingGroup(
 	liveGroups: chrome.tabGroups.TabGroup[],

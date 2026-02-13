@@ -1,9 +1,10 @@
-import { getActiveProjectId, getStore } from "../lib/storage.js";
+import { getActiveProjectId, getStore, isSwitching } from "../lib/storage.js";
 import {
 	autoSaveActiveProject,
 	countTabs,
 	switchToProject,
 } from "../lib/tab-groups.js";
+import { getLiveGroups } from "../lib/tabs.js";
 
 let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 const DEBOUNCE_MS = 2000;
@@ -34,6 +35,11 @@ function scheduleSave() {
 	if (saveTimeout) clearTimeout(saveTimeout);
 	saveTimeout = setTimeout(async () => {
 		saveTimeout = null;
+		// Skip auto-save while switching projects (closing old + restoring new)
+		if (await isSwitching()) return;
+		// Skip auto-save when no live groups exist (transitional state during switch)
+		const liveGroups = await getLiveGroups();
+		if (liveGroups.length === 0) return;
 		const activeId = await getActiveProjectId();
 		if (!activeId) return;
 
